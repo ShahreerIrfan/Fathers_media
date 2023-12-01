@@ -11,3 +11,8 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.created_at}'
+    
+
+class comment(models.Model):
+    name = models.CharField(max_length=50)
+    
