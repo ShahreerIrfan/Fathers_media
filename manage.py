@@ -20,3 +20,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+import os
+import sys
+
+# Add the path to the project directory
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'social_media')))
