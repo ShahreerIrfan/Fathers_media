@@ -6,7 +6,8 @@ from .forms import PostForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
-
+import random
+from django.core.paginator import Paginator
 
 @login_required
 def create_post(request):
@@ -24,12 +25,29 @@ def create_post(request):
 
 # posts/views.py
 
+
+
+# views.py
+
+
+
+# views.py
+
 from django.shortcuts import render
 from .models import Post
+import random
 
 def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'posts/post_list.html', {'posts': posts})
+    # Retrieve all posts from the database as a list
+    all_posts = list(Post.objects.all())
+
+    # Shuffle the list of posts randomly
+    random.shuffle(all_posts)
+
+    # Render the post page with the shuffled posts
+    return render(request, 'posts/post_list.html', {'posts': all_posts})
+
+
 
 
 

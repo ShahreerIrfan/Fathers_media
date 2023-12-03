@@ -2,52 +2,47 @@
 
 {% block body %}
 <h2>All Posts</h2>
-{% for post in posts %}
-  <div class="post">
-    <p>{{ post.user.username }} - {{ post.created_at }}</p>
-    <p>{{ post.content }}</p>
-    {% if post.image %}
-      <img style="width: 300px; height: auto;" src="{{ post.image.url }}" alt="Post Image">
-    {% endif %}
-    <p id="likes-count-{{ post.id }}">Likes: {{ post.likes.count }}</p>
-    <form id="like-form-{{ post.id }}" data-post-id="{{ post.id }}" class="like-form" method="post" action="{% url 'like_post' post.id %}">
-      {% csrf_token %}
-      <button type="button" class="like-button">{% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %}</button>
-    </form>
-  </div>
-{% endfor %}
+  {% for post in posts %}
+    <div class="post">
+      <p>{{ post.user.username }} - {{ post.created_at }}</p>
+      <p>{{ post.content }}</p>
+      {% if post.image %}
+        <img style="width: 300px; height: auto;" src="{{ post.image.url }}" alt="Post Image">
+      {% endif %}
+      <p id="likes-count-{{ post.id }}">Likes: {{ post.likes.count }}</p>
+      <form id="like-form-{{ post.id }}" data-post-id="{{ post.id }}" class="like-form" method="post" action="{% url 'like_post' post.id %}">
+        {% csrf_token %}
+        <button type="button" class="like-button">{% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %}</button>
+      </form>
+    </div>
+  {% endfor %}
 
-<script>
-  document.querySelectorAll('.like-button').forEach(button => {
-    button.addEventListener('click', function(event) {
-      event.preventDefault();
+  <script>
+    document.querySelectorAll('.like-button').forEach(button => {
+      button.addEventListener('click', function(event) {
+        event.preventDefault();
 
-      const postId = this.parentElement.dataset.postId;
-      const form = document.getElementById(`like-form-${postId}`);
-      const formData = new FormData(form);
+        const postId = this.parentElement.dataset.postId;
+        const form = document.getElementById(`like-form-${postId}`);
+        const formData = new FormData(form);
 
-      fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-        },
-      })
-      .then(response => response.json())
-      .then(data => {
-        const likesCountElement = document.getElementById(`likes-count-${postId}`);
-        const likeButton = document.querySelector(`#like-form-${postId} button`);
+        fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          const likesCountElement = document.getElementById(`likes-count-${postId}`);
+          const likeButton = document.querySelector(`#like-form-${postId} button`);
 
-        likesCountElement.innerText = `Likes: ${data.likes_count}`;
-        likeButton.innerText = data.liked ? 'Unlike' : 'Like';
-
-        // Reload the page after a short delay (e.g., 500 milliseconds)
-        setTimeout(() => {
-          window.location.href = window.location.href;
-        }, 500);
-      })
-      .catch(error => console.error(error));
+          likesCountElement.innerText = `Likes: ${data.likes_count}`;
+          likeButton.innerText = data.liked ? 'Unlike' : 'Like';
+        })
+        .catch(error => console.error(error));
+      });
     });
-  });
-</script>
+  </script>
 {% endblock %}
