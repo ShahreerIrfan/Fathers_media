@@ -74,6 +74,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'social_media.wsgi.application'
 
+# settings.py
+
+AUTH_USER_MODEL = 'users.CustomUser'  # Replace 'users.CustomUser' with the correct path to your custom user model.
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

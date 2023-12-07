@@ -8,6 +8,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 import random
 from django.core.paginator import Paginator
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from .models import Post, Comment
+from .forms import LikeForm, CommentForm
 
 @login_required
 def create_post(request):
@@ -35,17 +39,37 @@ def create_post(request):
 
 from django.shortcuts import render
 from .models import Post
-import random
+
 
 def post_list(request):
-    # Retrieve all posts from the database as a list
-    all_posts = list(Post.objects.all())
-
-    # Shuffle the list of posts randomly
-    random.shuffle(all_posts)
-
-    # Render the post page with the shuffled posts
+    all_posts = Post.objects.all()
     return render(request, 'posts/post_list.html', {'posts': all_posts})
+
+
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    comments = Comment.objects.filter(post=post)
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            new_comment.user = request.user  # Assuming you have user authentication
+            new_comment.save()
+            comments = Comment.objects.filter(post=post)  # Update comments after adding a new one
+
+            # Render comments as HTML
+            comments_html = render(request, 'posts/comments.html', {'comments': comments}).content.decode('utf-8')
+
+            return JsonResponse({'success': True, 'comments_html': comments_html})
+        else:
+            return JsonResponse({'success': False, 'errors': comment_form.errors})
+
+    else:
+        comment_form = CommentForm()
+
+    return render(request, 'posts/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form})
 
 
 
