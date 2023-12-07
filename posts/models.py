@@ -25,7 +25,7 @@ class Post(models.Model):
     comments = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Comment', related_name='commented_posts', blank=True)
     def __str__(self):
         return f'{self.user.username} - {self.content} - {self.created_at}'
-    
+        # 
 
     
 
