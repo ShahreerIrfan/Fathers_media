@@ -27,10 +27,3 @@ class Post(models.Model):
         return f'{self.user.username} - {self.content} - {self.created_at}'
     
 
-
-    
-
-    
-
-
-    
