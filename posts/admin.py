@@ -13,3 +13,4 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
 
 admin.site.register(Comment)
+# 

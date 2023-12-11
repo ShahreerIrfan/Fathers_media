@@ -59,7 +59,7 @@ def post_detail(request, post_id):
             new_comment.save()
             comments = Comment.objects.filter(post=post)  # Update comments after adding a new one
 
-            # Render comments as HTML
+
             comments_html = render(request, 'posts/comments.html', {'comments': comments}).content.decode('utf-8')
 
             return JsonResponse({'success': True, 'comments_html': comments_html})
@@ -75,11 +75,6 @@ def post_detail(request, post_id):
 
 
 
-
-
-# Like system
-
-# posts/views.py
 
 
 
