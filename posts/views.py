@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from .models import Post, Comment
 from .forms import LikeForm, CommentForm
 
+
 @login_required
 def create_post(request):
     if request.method == 'POST':
@@ -43,6 +44,7 @@ from .models import Post
 
 def post_list(request):
     all_posts = Post.objects.all()
+    # random(all_posts)
     return render(request, 'posts/post_list.html', {'posts': all_posts})
 
 
